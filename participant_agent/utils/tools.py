@@ -23,22 +23,28 @@ def multiply(a: int, b: int) -> int:
 
 # TODO: define restock pydantic model for structure input
 class RestockInput(BaseModel):
+    daily_usage: int = Field()
+    lead_time: int = Field()
+    safety_stock: int = Field()
     pass
 
 
 # TODO: modify to accept correct inputs and have meaningful docstring
 @tool("restock-tool", args_schema=RestockInput)
-def restock_tool() -> int:
-    """some description"""
-    pass
+def restock_tool(daily_usage, lead_time, safety_stock) -> int:
+    # this docstring is super important so that the llm knows how to use this tool
+    """restock formula tool used specifically for calculating the amount of food at which you should start restocking."""
+    print(f"\n Using restock tool!")
+    return (daily_usage * lead_time) + safety_stock
 
 
 # TODO: implement the retriever tool
-## update get_vector_store function
-# vector_store = get_vector_store()
-## update tool with appropriate information so the agent knows how to invoke
-# retriever_tool = create_retriever_tool()
+# update get_vector_store function
+vector_store = get_vector_store()
+# update tool with appropriate information so the agent knows how to invoke
+retriever_doc = "When asked about which direction to take, searches maps and routes to find the best path."
+retriever_tool = create_retriever_tool(vector_store.as_retriever(), "get directions", retriever_doc)
 
 # TODO: pass the retriever_tool and restock tool multiply is only meant as an example
 # tools = [retriever_tool, restock_tool]
-tools = [multiply]
+tools = [multiply, restock_tool]

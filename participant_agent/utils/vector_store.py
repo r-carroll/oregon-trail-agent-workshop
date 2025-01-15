@@ -24,7 +24,5 @@ def get_vector_store():
     except:
         print("Init vector store with document")
         config.from_existing = False
-
-        # TODO: define vector store
-        vector_store = None
+        vector_store = RedisVectorStore.from_documents([doc], OpenAIEmbeddings(), config=config)
     return vector_store

@@ -23,26 +23,31 @@ class GraphConfig(TypedDict):
 
 
 # TODO: define the graph to be used in testing
-# workflow = StateGraph(AgentState, config_schema=GraphConfig)
+workflow = StateGraph(AgentState, config_schema=GraphConfig)
 
-# # Update otherwise it won't work dawg
+# Update otherwise it won't work dawg
 
-# # node 1
-# workflow.add_node()
-# # node 2
-# workflow.add_node()
+# node 1
+workflow.add_node("agent", call_tool_model)
+# node 2
+workflow.add_node("tools", tool_node)
+workflow.add_node("multi_choice_structured", multi_choice_structured)
 
-# # entry
-# workflow.set_entry_point()
+# entry
+workflow.set_entry_point("agent")
 
-# # Conditional edge
-# workflow.add_conditional_edges()
+# Conditional edge
+workflow.add_conditional_edges("agent", tools_condition)
+workflow.add_conditional_edges("agent",
+                               is_multi_choice,
+                               {"multi-choice": "multi_choice_structured", "not-multi-choice": END}
+                               )
 
-# # We now add a normal edge.
-# workflow.add_edge()
+# We now add a normal edge.
+workflow.add_edge("tools", "agent")
+workflow.add_edge("multi_choice_structured", END)
 
-# # **graph defined here**
+# **graph defined here**
 
-# # Compiled graph will be picked up by workflow
-# graph = workflow.compile()
-graph = None
+# Compiled graph will be picked up by workflow
+graph = workflow.compile()
