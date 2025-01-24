@@ -2,6 +2,7 @@ from functools import lru_cache
 
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from langgraph.prebuilt import ToolNode
 
 from participant_agent.utils.tools import tools
@@ -17,6 +18,8 @@ def _get_tool_model(model_name: str):
     """
     if model_name == "openai":
         model = ChatOpenAI(temperature=0, model_name="gpt-4o")
+    elif model_name == "ollama":
+        model = ChatOllama(temperature=0, model="llama3.1")
     else:
         raise ValueError(f"Unsupported model type: {model_name}")
 
@@ -32,6 +35,8 @@ def _get_tool_model(model_name: str):
 def _get_response_model(model_name: str):
     if model_name == "openai":
         model = ChatOpenAI(temperature=0, model_name="gpt-4o")
+    elif model_name == "ollama":
+        model = ChatOllama(temperature=0, model="llama3.1")
     else:
         raise ValueError(f"Unsupported model type: {model_name}")
 
