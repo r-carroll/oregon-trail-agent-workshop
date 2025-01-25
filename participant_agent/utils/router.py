@@ -16,7 +16,13 @@ blocked_references = [
 ]
 
 # TODO: implement route to blocked traffic
-blocked_route = None
+blocked_route = Route(name="block_list", references=blocked_references)
 
 # TODO: implement allow/block router
-router = None
+router = SemanticRouter(
+    name="bouncer",
+    vectorizer=HFTextVectorizer(),
+    routes=[blocked_route],
+    redis_url=REDIS_URL,
+    overwrite=False,
+)

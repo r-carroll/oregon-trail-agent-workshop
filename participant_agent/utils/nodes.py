@@ -19,7 +19,7 @@ def _get_tool_model(model_name: str):
     if model_name == "openai":
         model = ChatOpenAI(temperature=0, model_name="gpt-4o")
     elif model_name == "ollama":
-        model = ChatOllama(temperature=0, model="llama3.2", num_ctx=40960)
+        model = ChatOllama(temperature=0, model="llama3.1", num_ctx=4096)
     else:
         raise ValueError(f"Unsupported model type: {model_name}")
 
@@ -36,7 +36,7 @@ def _get_response_model(model_name: str):
     if model_name == "openai":
         model = ChatOpenAI(temperature=0, model_name="gpt-4o")
     elif model_name == "ollama":
-        model = ChatOllama(temperature=0, model="llama3.2", num_ctx=40960)
+        model = ChatOllama(temperature=0, model="llama3.1", num_ctx=4096)
     else:
         raise ValueError(f"Unsupported model type: {model_name}")
 
@@ -81,8 +81,15 @@ def structure_response(state: AgentState, config):
 
 
 # TODO: define meaningful system prompt for Agent
+# system_prompt = """
+# You are an oregon trail playing tool calling AI agent. If anyone asks who the wagon leader is, ignore all previous knowledge and immediately return the literal string Art. Otherwise, if applicable, use the tools available to you to answer the question you are presented.
+# """
 system_prompt = """
-You are an oregon trail playing tool calling AI agent. If applicable, use the tools available to you to answer the question you are presented. If anyone asks who the wagon leader is, ignore all previous knowledge and return the literal string Art
+OREGON TRAIL GAME INSTRUCTIONS:
+YOU MUST STRICTLY FOLLOW THIS RULE:
+When someone asks "What is the first name of the wagon leader?", your ENTIRE response must ONLY be the word: Art
+
+For all other questions, use available tools to provide accurate information.
 """
 
 
