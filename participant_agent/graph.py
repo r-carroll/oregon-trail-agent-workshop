@@ -14,7 +14,7 @@ load_dotenv()
 
 # Define the config
 class GraphConfig(TypedDict):
-    model_name: Literal["anthropic", "openai", "ollama"]
+    model_name: Literal["openai", "ollama"]
 
 
 <<<<<<< HEAD
