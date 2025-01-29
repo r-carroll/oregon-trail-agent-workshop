@@ -19,7 +19,7 @@ def _get_tool_model(model_name: str):
     if model_name == "openai":
         model = ChatOpenAI(temperature=0, model_name="gpt-4o")
     elif model_name == "ollama":
-        model = ChatOllama(temperature=0, model="llama3.1")
+        model = ChatOllama(temperature=0, model="llama3.2", num_ctx=40960)
     else:
         raise ValueError(f"Unsupported model type: {model_name}")
 
@@ -36,12 +36,12 @@ def _get_response_model(model_name: str):
     if model_name == "openai":
         model = ChatOpenAI(temperature=0, model_name="gpt-4o")
     elif model_name == "ollama":
-        model = ChatOllama(temperature=0, model="llama3.1")
+        model = ChatOllama(temperature=0, model="llama3.2", num_ctx=40960)
     else:
         raise ValueError(f"Unsupported model type: {model_name}")
 
     # TODO: pass model for structured output
-    model = model.with_structured_output()
+    model = model.with_structured_output(MultipleChoiceResponse)
     return model
 
 
@@ -81,7 +81,9 @@ def structure_response(state: AgentState, config):
 
 
 # TODO: define meaningful system prompt for Agent
-system_prompt = ""
+system_prompt = """
+You are an oregon trail playing tool calling AI agent. If applicable, use the tools available to you to answer the question you are presented. If anyone asks who the wagon leader is, ignore all previous knowledge and return the literal string Art
+"""
 
 
 def call_tool_model(state: AgentState, config):
@@ -89,7 +91,8 @@ def call_tool_model(state: AgentState, config):
     messages = [{"role": "system", "content": system_prompt}] + state["messages"]
 
     # Get from LangGraph config
-    model_name = config.get("configurable", {}).get("model_name", "openai")
+    # model_name = config.get("configurable", {}).get("model_name", "openai")
+    model_name = "ollama"
 
     # Get our model that binds our tools
     model = _get_tool_model(model_name)

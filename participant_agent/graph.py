@@ -12,11 +12,12 @@ from participant_agent.utils.state import AgentState
 load_dotenv()
 
 
-# The graph config can be updated with LangGraph Studio which can be helpful
+# Define the config
 class GraphConfig(TypedDict):
-    model_name: Literal["ollama"]  # could add more LLM providers here
+    model_name: Literal["ollama"]
 
 
+<<<<<<< HEAD
 # Define the function that determines whether to continue or not
 def should_continue(state: AgentState):
     messages = state["messages"]
@@ -31,25 +32,40 @@ def should_continue(state: AgentState):
 
 # TODO: define the graph to be used in testing
 # workflow = StateGraph(AgentState, config_schema=GraphConfig)
+=======
+# Define a new graph
+workflow = StateGraph(AgentState, config_schema=GraphConfig)
+>>>>>>> 1a4544d (clear 3 modules)
 
-# # Update otherwise it won't work dawg
+# Define the two nodes we will cycle between
+workflow.add_node("agent", call_tool_model)
+# workflow.add_node("respond", respond)
+workflow.add_node("tools", tool_node)
+workflow.add_node("multi_choice_structured", multi_choice_structured)
 
-# # node 1
-# workflow.add_node()
-# # node 2
-# workflow.add_node()
+# Set the entrypoint as `agent`
+# This means that this node is the first one called
+workflow.set_entry_point("agent")
 
-# # entry
-# workflow.set_entry_point()
+# We now add a conditional edge
+workflow.add_conditional_edges(
+    "agent",
+    tools_condition,
+)
 
-# # Conditional edge
-# workflow.add_conditional_edges()
+workflow.add_conditional_edges(
+    "agent",
+    is_multi_choice,
+    {"multi-choice": "multi_choice_structured", "not-multi-choice": END},
+)
 
-# # We now add a normal edge.
-# workflow.add_edge()
+# We now add a normal edge from `tools` to `agent`.
+# This means that after `tools` is called, `agent` node is called next.
+workflow.add_edge("tools", "agent")
+workflow.add_edge("multi_choice_structured", END)
 
-# # **graph defined here**
 
-# # Compiled graph will be picked up by workflow
-# graph = workflow.compile()
-graph = None
+# Finally, we compile it!
+# This compiles it into a LangChain Runnable,
+# meaning you can use it as you would any other runnable
+graph = workflow.compile()
