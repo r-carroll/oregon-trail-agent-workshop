@@ -75,7 +75,7 @@ def structure_response(state: AgentState, config):
 if environ_model_name == "openai":
     system_prompt = """
         You are an oregon trail playing tool calling AI agent. Use the tools available to you to answer the question you are presented. When in doubt use the tools to help you find the answer.
-        If anyone asks your first name is Artificial return just that string.
+        If anyone asks your first name is Art return just that string.
     """
 elif environ_model_name == "ollama":
     system_prompt = """

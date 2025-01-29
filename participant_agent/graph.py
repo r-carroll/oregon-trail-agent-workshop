@@ -17,7 +17,6 @@ class GraphConfig(TypedDict):
     model_name: Literal["openai", "ollama"]
 
 
-<<<<<<< HEAD
 # Define the function that determines whether to continue or not
 def should_continue(state: AgentState):
     messages = state["messages"]
@@ -32,16 +31,14 @@ def should_continue(state: AgentState):
 
 # TODO: define the graph to be used in testing
 # workflow = StateGraph(AgentState, config_schema=GraphConfig)
-=======
 # Define a new graph
 workflow = StateGraph(AgentState, config_schema=GraphConfig)
->>>>>>> 1a4544d (clear 3 modules)
 
 # Define the two nodes we will cycle between
 workflow.add_node("agent", call_tool_model)
 # workflow.add_node("respond", respond)
 workflow.add_node("tools", tool_node)
-workflow.add_node("multi_choice_structured", multi_choice_structured)
+workflow.add_node("structure_response", structure_response)
 
 # Set the entrypoint as `agent`
 # This means that this node is the first one called
@@ -50,19 +47,14 @@ workflow.set_entry_point("agent")
 # We now add a conditional edge
 workflow.add_conditional_edges(
     "agent",
-    tools_condition,
-)
-
-workflow.add_conditional_edges(
-    "agent",
-    is_multi_choice,
-    {"multi-choice": "multi_choice_structured", "not-multi-choice": END},
+    should_continue,
+    {"continue": "tools", "structure_response": "structure_response"},
 )
 
 # We now add a normal edge from `tools` to `agent`.
 # This means that after `tools` is called, `agent` node is called next.
 workflow.add_edge("tools", "agent")
-workflow.add_edge("multi_choice_structured", END)
+workflow.add_edge("structure_response", END)
 
 
 # Finally, we compile it!

@@ -18,7 +18,7 @@ def get_vector_store():
     if os.environ.get("MODEL_NAME") == "ollama":
         return __get_ollama_vector_store()
     elif os.environ.get("MODEL_NAME") == "openai":
-        __get_openai_vector_store()
+        return __get_openai_vector_store()
 
 def __check_existing_embedding(vector_store):
     results = vector_store.similarity_search(doc, k=1)
