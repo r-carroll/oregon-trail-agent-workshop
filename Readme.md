@@ -17,6 +17,10 @@ In this workshop, we are going to use [LangGraph](https://langchain-ai.github.io
 - [docker](https://docs.docker.com/get-started/get-docker/)
 - [openai api key](https://platform.openai.com/docs/quickstart)
 
+## (Optional) Ollama
+This workshop is optimized to run targeting OpenAI models. If you prefer to run locally however, you may do so via Ollama. 
+* [Ollama setup instructions](Ollama.md)
+
 ## (Optional) helpers
 
 - [LangSmith](https://docs.smith.langchain.com/)
